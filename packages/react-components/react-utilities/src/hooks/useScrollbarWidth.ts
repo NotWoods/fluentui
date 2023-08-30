@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useMemo } from 'react';
 
 const cache = new WeakMap<Document, number>();
 
@@ -12,14 +12,21 @@ interface UseScrollbarWidthOptions {
    * Does not use the cache and recalculates the scrollbar width
    */
   force?: boolean;
+
+  /**
+   * CSS class to apply to the scrollable element.
+   * Used for checking scrollbar width of an element with a styled scrollbar.
+   */
+  className?: string;
 }
 
 /**
- * @returns The width in pixels of the scrollbar in the user agent
+ * @returns The width in pixels of the scrollbar in the user agent.
+ * May be 0 for overlay scrollbars.
  */
 export function useScrollbarWidth(options: UseScrollbarWidthOptions) {
-  const { targetDocument, force } = options;
-  return React.useMemo(() => {
+  const { targetDocument, force, className } = options;
+  return useMemo(() => {
     if (!targetDocument) {
       return 0;
     }
@@ -29,6 +36,9 @@ export function useScrollbarWidth(options: UseScrollbarWidthOptions) {
     }
 
     const outer = targetDocument.createElement('div');
+    if (className) {
+      outer.className = className;
+    }
     outer.style.visibility = 'hidden';
     outer.style.overflow = 'scroll';
 
@@ -40,5 +50,5 @@ export function useScrollbarWidth(options: UseScrollbarWidthOptions) {
     outer.remove();
     cache.set(targetDocument, scrollbarWidth);
     return scrollbarWidth;
-  }, [targetDocument, force]);
+  }, [targetDocument, force, className]);
 }
