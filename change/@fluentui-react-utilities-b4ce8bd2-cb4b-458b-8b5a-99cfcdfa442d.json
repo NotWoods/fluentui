@@ -1,0 +1,7 @@
+{
+  "type": "minor",
+  "comment": "calculate width of styled scrollbar",
+  "packageName": "@fluentui/react-utilities",
+  "email": "tigeroakes@microsoft.com",
+  "dependentChangeType": "patch"
+}
